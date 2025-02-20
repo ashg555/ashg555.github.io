@@ -1,47 +1,41 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const postsContainer = document.getElementById('posts-container');
 
-    // Fetching data from the API
-    fetch('https://jsonplaceholder.typicode.com/posts')
-        .then(response => response.json())
-        .then(data => {
-            // Loop through each post and display it
-            data.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                
-                // Add content to the post
-                postElement.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>${post.body}</p>
-                `;
-                
-                postsContainer.appendChild(postElement);
+const baseURL = "https://superheroapi.com/api/0f8ed6f55b663f50fc5c2884e78e940b";
+
+getHero(1);
+
+
+
+function getHero(id) {
+    let getDataPromise = new Promise(async function (myResolve, myReject) {
+
+        try {
+            const response = await fetch(baseURL + id, {
+                method: 'GET',
+                mode: 'no-cors'
             });
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-});
+            console.log(response)
 
-let currentPage = 1;
-const postsPerPage = 5;
 
-function loadMorePosts() {
-    const postsContainer = document.getElementById('posts-container');
+            if (!response.ok) {
+                myReject(response.status);
+                return;
+            }
 
-    currentPage++;
-    fetch(`https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=${postsPerPage}`)
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(post => {
-                const postElement = document.createElement('div');
-                postElement.classList.add('post');
-                postElement.innerHTML = `
-                    <h3>${post.title}</h3>
-                    <p>${post.body}</p>
-                `;
-                postsContainer.appendChild(postElement);
-            });
-        });
+            const json = await response.json();
+            console.log(json);
+            myResolve(json);
+
+        } catch (error) {
+            myReject(error);
+        }
+    });
+    
+    getDataPromise.then(
+        function (value) {
+            
+        },
+        function (error) {
+            console.log(error)
+        }
+    );
 }
