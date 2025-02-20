@@ -10,8 +10,7 @@ function getHero(id) {
 
         try {
             const response = await fetch(baseURL + id, {
-                method: 'GET',
-                mode: 'no-cors'
+                method: 'GET'
             });
             console.log(response)
 
